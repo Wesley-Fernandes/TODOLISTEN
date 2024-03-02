@@ -4,6 +4,7 @@ import prisma from "../Configurations/Prisma";
 import Webhook from "../Configurations/Webhook";
 import Variables from "../Configurations/Variables";
 import stripe from "../Configurations/Webhook/Stripe";
+import Utils from "../Utils";
 
 export class StripeController {
   async createCheckout(req: Request, res: Response) {
@@ -11,6 +12,10 @@ export class StripeController {
 
     if (!userID || typeof userID !== "string") {
       return res.status(403).json({ message: "Você não está autorizado!" });
+    }
+
+    if (!Utils.Mongo.is_valid_id(userID)) {
+      return res.status(403).json({ message: "ID invalido." });
     }
 
     const user = await prisma.user.findUnique({

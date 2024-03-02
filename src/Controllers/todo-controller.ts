@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import prisma from "../Configurations/Prisma";
 import { createTodoType } from "../@types/todo.types";
+import Utils from "../Utils";
 
 export class TodoController {
   async listAll(req: Request, res: Response) {
@@ -9,6 +10,10 @@ export class TodoController {
       return res
         .status(403)
         .json({ message: "Você não está autorizado a acessar. 1" });
+    }
+
+    if (!Utils.Mongo.is_valid_id(userID)) {
+      return res.status(403).json({ message: "ID invalido." });
     }
 
     const todos = await prisma.todo.findMany({ where: { ownerID: userID } });
@@ -21,6 +26,10 @@ export class TodoController {
 
     if (!userID || typeof userID !== "string") {
       return res.status(403).json({ message: "Você não está autorizado!" });
+    }
+
+    if (!Utils.Mongo.is_valid_id(userID)) {
+      return res.status(403).json({ message: "ID invalido." });
     }
 
     const user = await prisma.user.findUnique({
@@ -73,15 +82,27 @@ export class TodoController {
       return res.status(403).json({ message: "Você não está autorizado!" });
     }
 
+    if (!Utils.Mongo.is_valid_id(userID)) {
+      return res.status(403).json({ message: "Você não têm autorização." });
+    }
+
     const user = await prisma.user.findUnique({ where: { id: userID } });
 
     if (!user || !user.id) {
       return res.status(403).json({ message: "Você não está autorizado!" });
     }
 
+    if (!Utils.Mongo.is_valid_id(id)) {
+      return res.status(403).json({ message: "ID invalido." });
+    }
+
     const todo = await prisma.todo.findUnique({
       where: { id },
     });
+
+    if (!todo) {
+      return res.status(404).json({ message: "Tarefa não existe." });
+    }
 
     return res.status(200).json({ todo });
   }
@@ -92,6 +113,10 @@ export class TodoController {
 
     if (!userID || typeof userID !== "string") {
       return res.status(403).json({ message: "Você não está autorizado!" });
+    }
+
+    if (!Utils.Mongo.is_valid_id(userID)) {
+      return res.status(403).json({ message: "ID invalido." });
     }
 
     const user = await prisma.user.findUnique({ where: { id: userID } });

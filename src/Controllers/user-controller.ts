@@ -45,6 +45,11 @@ export class UserController {
     if (!id) {
       return res.status(400).json({ message: "ID invalido." });
     }
+
+    if (!Utils.Mongo.is_valid_id(id)) {
+      return res.status(403).json({ message: "ID invalido." });
+    }
+    
     const user = await prisma.user.findUnique({
       where: { id: id },
       select: {
@@ -53,7 +58,9 @@ export class UserController {
     });
 
     if (!user?.id) {
-      return res.status(404).json({ message: "Impossivel deletar. Usuario não encontrado." });
+      return res
+        .status(404)
+        .json({ message: "Impossivel deletar. Usuario não encontrado." });
     }
 
     await prisma.user
@@ -66,7 +73,6 @@ export class UserController {
       .catch((error) => {
         return res.status(400).json({ message: error });
       });
-    
   }
   async createUser(req: Request, res: Response) {
     const { email, name, password }: CreateUserTypes = req.body;
@@ -102,7 +108,10 @@ export class UserController {
       return;
     }
 
-    let customer = await Utils.Stripe.create_customer_if_not_exist({email: user.email, name: user.name});
+    let customer = await Utils.Stripe.create_customer_if_not_exist({
+      email: user.email,
+      name: user.name,
+    });
 
     await prisma.user.update({
       where: {
