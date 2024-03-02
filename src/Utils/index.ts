@@ -1,3 +1,4 @@
 import Stripe from "./Stripe";
+import Mongo from "./Mongo";
 
-export default { Stripe };
+export default { Stripe, Mongo };
