@@ -3,9 +3,10 @@ import express from "express";
 import Routes from "../Routes";
 import { StripeController } from "../Controllers/stripe-controller";
 
+
 class Server {
   private readonly express = express();
-  private readonly PORT = 4041;
+  private readonly PORT = process.env.PORT||4041;
   //-----------------ROUTES----------------
   private readonly routes = new Routes();
   private readonly stripe = new StripeController();

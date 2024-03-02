@@ -10,7 +10,7 @@ const stripe_controller_1 = require("../Controllers/stripe-controller");
 class Server {
     constructor() {
         this.express = (0, express_1.default)();
-        this.PORT = 4041;
+        this.PORT = process.env.PORT || 4041;
         //-----------------ROUTES----------------
         this.routes = new Routes_1.default();
         this.stripe = new stripe_controller_1.StripeController();

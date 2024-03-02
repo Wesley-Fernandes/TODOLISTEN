@@ -12,6 +12,8 @@ if (!WEBHOOK_SECRETKEY) {
   throw new Error("STRIPE_PUBKEY is not defined");
 } else if (!STRIPE_PRO_PRICE) {
   throw new Error("STRIPE_PRO_PRICE is not defined");
+} else if (!STRIPE_PRO_PRICE) {
+  throw new Error("STRIPE_PRO_PRICE is not defined");
 }
 const Variables = {
   stripe: {
